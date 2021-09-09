@@ -1,0 +1,41 @@
+.menus{
+margin-left: 350px;
+}
+.menu{
+    margin-left: 35px;
+    text-decoration: none;
+    color: white;
+}
+.login-button{
+   
+    margin-left:50px;
+}
+.sign {
+    height: 42px;
+    width: 145px;
+    
+    background: #ff3a44;
+    border-radius: 50px;
+    color: white;
+  }
+  @media(max-width:600px){
+    .menus{
+        margin-left:0px;
+        }
+        .menu{
+            margin-top: 20px;
+            margin-right: 85px;
+            text-decoration: none;
+            color: white;
+        }
+       
+        .sign {
+            height: 42px;
+            width: 145px;
+            margin-left:100px;
+         margin-top:20px;
+            background: #ff3a44;
+            border-radius: 50px;
+            color: white;
+          }
+  }

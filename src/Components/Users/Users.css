@@ -1,0 +1,31 @@
+.header{
+    font-size:25px;
+    font-weight:500;
+}
+.table{
+    margin-top:20px;
+    margin-bottom:20px;
+}
+.icon{
+    background-color: rgb(26, 244, 81);
+    color: white;
+    border-radius: 40px;
+   padding: 5px;
+}
+.delete{
+    background-color: rgb(244, 7, 7);
+    color: white;
+    border-radius: 40px;
+   padding: 5px;
+   margin-left: 5px;
+}
+
+.form{
+    width:50%;
+}
+@media(max-width:600px){
+    .form{
+        width:100%;
+    }  
+   
+}
