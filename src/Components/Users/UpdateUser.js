@@ -3,7 +3,6 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import "./Users.css";
 import { Form } from "react-bootstrap";
 import Button from "@restart/ui/esm/Button";
-
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -16,12 +15,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import { IconButton } from "@material-ui/core";
-import Visibility from "@material-ui/icons/Visibility";
-import { useParams, useHistory } from "react-router-dom";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { useHistory, useParams } from "react-router";
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -46,19 +40,17 @@ const useStyles = makeStyles({
   },
 });
 
-const Users = () => {
+const UpdateUser = () => {
   const [info, setInfo] = useState({});
   const [user, setUser] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const [dbStatus, setDbStatus] = useState(false);
-  const [values, setValues] = useState({
-    password: "******",
-    showPassword: false,
-  });
-  const handleBlur = (e) => {
-    const newInfo = { ...info };
-    newInfo[e.target.name] = e.target.value;
-    setInfo(newInfo);
-  };
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { id } = useParams();
 
   // fetch data
   useEffect(() => {
@@ -66,44 +58,59 @@ const Users = () => {
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, []);
+  // show data without reload
+  //   const usersInfo = () => {
+  //     fetch("http://localhost:5000/users")
+  //       .then((res) => res.json())
+  //       .then((data) => setUser(data));
+  //   };
 
-  // submit
-  const handleSubmit = async (e) => {
-    const usersData = {
-      firstName: e.target.firstName.value,
-      lastName: e.target.lastName.value,
-      userName: e.target.userName.value,
-      email: e.target.email.value,
-      password: e.target.password.value,
+  // update information
+  useEffect(() => {
+    const loadData = async () => {
+      const res = await axios.get(`http://localhost:5000/updateUser/${id}`);
+      setUserInfo(res.data);
     };
-    if (e.target.firstName.value === "") {
-      alert("first name can't be blank");
-    } else if (e.target.lastName.value === "") {
-      alert("last name can't be blank");
-    } else if (e.target.userName.value === "") {
-      alert("user name can't be blank");
-    } else if (e.target.email.value === "") {
-      alert("email can't be blank");
-    } else if (e.target.password.value === "") {
-      alert("password name can't be blank");
-    } else {
-      try {
-        const res = await axios.post(
-          "http://localhost:5000/addUser",
-          usersData
-        );
-        if (res) {
-          setDbStatus(res);
-          e.target.reset();
-          alert("Information added successfully");
-        }
-      } catch (error) {
-        console.error(error);
-        console.log(usersData);
-      }
-    }
+    loadData();
+  }, [id]);
+
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+  };
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
+  };
+  const handleUserName = (e) => {
+    setUserName(e.target.value);
+  };
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
   };
 
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  // submit
+  const handleUserClick = async (id) => {
+    const updateStudent = {
+      id,
+      firstName: firstName || userInfo.firstName,
+      lastName: lastName || userInfo.lastName,
+      userName: userName || userInfo.userName,
+      email: email || userInfo.email,
+      password: password || userInfo.password,
+    };
+    const res = await axios.patch(
+      `http://localhost:5000/updateUserInfo/${id}`,
+      updateStudent
+    );
+    if (res) {
+      setDbStatus(res);
+      alert("User information Updated");
+      //   usersInfo();
+    }
+  };
   //  delete
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/deleteUser/${id}`, {
@@ -123,30 +130,25 @@ const Users = () => {
       .then((data) => setUser(data));
   };
 
+  const classes = useStyles();
   const history = useHistory();
   const handleUpdate = (id) => {
     history.push(`/updateUsers/${id}`);
   };
-
-  const classes = useStyles();
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
   var i = 1;
-
   return (
     <div className="container mt-5">
       <p className="header">
+        {" "}
         <SupervisedUserCircleIcon />
         User Management
       </p>
-
-      <Form onSubmit={handleSubmit} className="form m-auto">
+      <Form className="form m-auto">
         <Form.Group className="mb-3">
           <Form.Control
-            onBlur={handleBlur}
+            defaultValue={userInfo.firstName}
+            onBlur={handleFirstName}
+            pattern="^[a-zA-Z]*$"
             name="firstName"
             type="text"
             placeholder="First Name"
@@ -154,7 +156,9 @@ const Users = () => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Control
-            onBlur={handleBlur}
+            defaultValue={userInfo.lastName}
+            onBlur={handleLastName}
+            pattern="^[a-zA-Z]*$"
             name="lastName"
             type="text"
             placeholder="Last Name"
@@ -162,7 +166,9 @@ const Users = () => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Control
-            onBlur={handleBlur}
+            defaultValue={userInfo.userName}
+            onBlur={handleUserName}
+            pattern="^[a-zA-Z]*$"
             name="userName"
             type="text"
             placeholder="Username"
@@ -170,32 +176,38 @@ const Users = () => {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Control
-            onBlur={handleBlur}
+            defaultValue={userInfo.email}
+            onBlur={handleEmail}
             name="email"
             type="email"
             placeholder="Email"
           />
         </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Control
-            onBlur={handleBlur}
+            defaultValue={userInfo.password}
+            onBlur={handlePassword}
             name="password"
             type="password"
             placeholder="Password"
           />
         </Form.Group>
-        <Button className="btn btn-primary w-100" type="submit">
-          Create User
+
+        <Button
+          onClick={() => handleUserClick(userInfo._id)}
+          className="btn btn-primary w-100"
+          type="submit"
+        >
+          Update User
         </Button>
       </Form>
-
       <div className="table">
         <TableContainer component={Paper}>
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>ID</StyledTableCell>
-
                 <StyledTableCell align="left">First Name</StyledTableCell>
                 <StyledTableCell align="left">Last Name</StyledTableCell>
                 <StyledTableCell align="left">UserName</StyledTableCell>
@@ -210,33 +222,19 @@ const Users = () => {
                   <StyledTableCell component="th" scope="row">
                     {i++}
                   </StyledTableCell>
-
                   <StyledTableCell align="left">{u.firstName}</StyledTableCell>
                   <StyledTableCell align="left">{u.lastName}</StyledTableCell>
                   <StyledTableCell align="left">{u.userName}</StyledTableCell>
                   <StyledTableCell align="left">{u.email}</StyledTableCell>
                   <StyledTableCell align="left">
-                    <div className="d-flex">
-                      <div className="pass">
-                        {values.showPassword ? "" : values.password}
-                        {values.showPassword ? u.password : ""}
-                      </div>
-                      <IconButton onClick={() => handleClickShowPassword()}>
-                        {values.showPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </div>
+                    {u.password} <VisibilityIcon />
                   </StyledTableCell>
                   <StyledTableCell align="left">
                     <div className="d-flex">
                       <CreateIcon
-                        onClick={() => handleUpdate(u._id)}
                         className="icon"
+                        onClick={() => handleUpdate(u._id)}
                       />
-
                       <DeleteIcon
                         className="delete"
                         onClick={() => handleDelete(u._id)}
@@ -253,4 +251,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default UpdateUser;
