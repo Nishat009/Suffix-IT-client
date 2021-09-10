@@ -11,11 +11,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
 import { useHistory, useParams } from "react-router";
+import { IconButton } from "@material-ui/core";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import Visibility from "@material-ui/icons/Visibility";
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -51,19 +53,17 @@ const UpdateUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { id } = useParams();
-
+  const [values, setValues] = useState({
+    password: "******",
+    showPassword: false,
+  });
   // fetch data
   useEffect(() => {
     fetch("http://localhost:5000/users")
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, []);
-  // show data without reload
-  //   const usersInfo = () => {
-  //     fetch("http://localhost:5000/users")
-  //       .then((res) => res.json())
-  //       .then((data) => setUser(data));
-  //   };
+  
 
   // update information
   useEffect(() => {
@@ -135,6 +135,10 @@ const UpdateUser = () => {
   const handleUpdate = (id) => {
     history.push(`/updateUsers/${id}`);
   };
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
   var i = 1;
   return (
     <div className="container mt-5">
@@ -227,7 +231,19 @@ const UpdateUser = () => {
                   <StyledTableCell align="left">{u.userName}</StyledTableCell>
                   <StyledTableCell align="left">{u.email}</StyledTableCell>
                   <StyledTableCell align="left">
-                    {u.password} <VisibilityIcon />
+                  <div className="d-flex">
+                      <div className="pass">
+                        {values.showPassword ? "" : values.password}
+                        {values.showPassword ? u.password : ""}
+                      </div>
+                      <IconButton onClick={() => handleClickShowPassword()}>
+                        {values.showPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </div>
                   </StyledTableCell>
                   <StyledTableCell align="left">
                     <div className="d-flex">

@@ -12,15 +12,12 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import { IconButton } from "@material-ui/core";
+import { IconButton, TableFooter, TablePagination } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
-import { useParams, useHistory } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -54,6 +51,16 @@ const Users = () => {
     password: "******",
     showPassword: false,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+    setPage(0);
+  };
   const handleBlur = (e) => {
     const newInfo = { ...info };
     newInfo[e.target.name] = e.target.value;
@@ -113,7 +120,7 @@ const Users = () => {
       .then((data) => {
         if (data) {
           deleteUser();
-          alert("User Deleted Successfully");
+          alert("Are you sure to delete this data?");
         }
       });
   };
@@ -181,6 +188,7 @@ const Users = () => {
             onBlur={handleBlur}
             name="password"
             type="password"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             placeholder="Password"
           />
         </Form.Group>
@@ -205,7 +213,7 @@ const Users = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {user.map((u) => (
+              {user.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((u) => (
                 <StyledTableRow key={u.name}>
                   <StyledTableCell component="th" scope="row">
                     {i++}
@@ -246,8 +254,23 @@ const Users = () => {
                 </StyledTableRow>
               ))}
             </TableBody>
-          </Table>
+          
+            
+     
+         </Table>
         </TableContainer>
+        <TablePagination
+        rowsPerPageOptions={[]}
+        component="div"
+        count={user.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        variant="outlined" 
+        shape="rounded"
+        color="primary"
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      /> 
       </div>
     </div>
   );
