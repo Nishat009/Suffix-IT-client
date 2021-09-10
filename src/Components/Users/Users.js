@@ -15,11 +15,10 @@ import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
-import { Box, IconButton, TableFooter, TablePagination } from "@material-ui/core";
+import { IconButton, TableFooter, TablePagination } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import {  useHistory } from "react-router-dom";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { Pagination } from "@material-ui/lab";
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -36,10 +35,6 @@ const StyledTableRow = withStyles((theme) => ({
       backgroundColor: theme.palette.action.hover,
     },
   },
-  paginator: {
-    justifyContent: "center",
-    padding: "10px"
-  }
 }))(TableRow);
 
 const useStyles = makeStyles({
@@ -56,16 +51,11 @@ const Users = () => {
     password: "******",
     showPassword: false,
   });
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const itemsPerPage = 5;
-  const [noOfPages] = useState(
-    Math.ceil(user.length / itemsPerPage)
-  );
-  const handleChange = (event, value) => {
-    setPage(value);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
-
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(event.target.value);
@@ -223,7 +213,7 @@ const Users = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {user.slice((page - 1) * itemsPerPage, page * itemsPerPage).map((u) => (
+              {user.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((u) => (
                 <StyledTableRow key={u.name}>
                   <StyledTableCell component="th" scope="row">
                     {i++}
@@ -269,20 +259,7 @@ const Users = () => {
      
          </Table>
         </TableContainer>
-        <Box component="span">
-        <Pagination
-          count={noOfPages}
-          page={page}
-          onChange={handleChange}
-          defaultPage={1}
-          color="primary"
-          size="large"
-          showFirstButton
-          showLastButton
-          classes={{ ul: classes.paginator }}
-        />
-      </Box>
-        {/* <TablePagination
+        <TablePagination
         rowsPerPageOptions={[]}
         component="div"
         count={user.length}
@@ -293,7 +270,7 @@ const Users = () => {
         color="primary"
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />  */}
+      /> 
       </div>
     </div>
   );
