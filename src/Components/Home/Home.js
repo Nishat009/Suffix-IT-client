@@ -2,8 +2,9 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div>
-      <h1>home</h1>
+    <div className="container mt-5">
+      <img src="https://media2.giphy.com/media/tXL4FHPSnVJ0A/giphy.gif" alt="" />
+      
     </div>
   );
 };

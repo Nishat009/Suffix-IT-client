@@ -15,7 +15,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
 import { useHistory, useParams } from "react-router";
-import { IconButton } from "@material-ui/core";
+import { IconButton, TablePagination } from "@material-ui/core";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Visibility from "@material-ui/icons/Visibility";
 const StyledTableCell = withStyles((theme) => ({
@@ -43,7 +43,6 @@ const useStyles = makeStyles({
 });
 
 const UpdateUser = () => {
-  const [info, setInfo] = useState({});
   const [user, setUser] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [dbStatus, setDbStatus] = useState(false);
@@ -57,13 +56,26 @@ const UpdateUser = () => {
     password: "******",
     showPassword: false,
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // pagination
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+    setPage(0);
+  };
+  //......................................................
+
   // fetch data
   useEffect(() => {
     fetch("http://localhost:5000/users")
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, []);
-  
 
   // update information
   useEffect(() => {
@@ -91,6 +103,8 @@ const UpdateUser = () => {
     setPassword(e.target.value);
   };
 
+  // ...................................
+
   // submit
   const handleUserClick = async (id) => {
     const updateStudent = {
@@ -108,9 +122,11 @@ const UpdateUser = () => {
     if (res) {
       setDbStatus(res);
       alert("User information Updated");
-      //   usersInfo();
     }
   };
+
+  // ..............................
+
   //  delete
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/deleteUser/${id}`, {
@@ -129,8 +145,10 @@ const UpdateUser = () => {
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
+// ................................
 
   const classes = useStyles();
+  
   const history = useHistory();
   const handleUpdate = (id) => {
     history.push(`/updateUsers/${id}`);
@@ -221,47 +239,63 @@ const UpdateUser = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {user.map((u) => (
-                <StyledTableRow key={u.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {i++}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">{u.firstName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.lastName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.userName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.email}</StyledTableCell>
-                  <StyledTableCell align="left">
-                  <div className="d-flex">
-                      <div className="pass">
-                        {values.showPassword ? "" : values.password}
-                        {values.showPassword ? u.password : ""}
+              {user
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((u) => (
+                  <StyledTableRow key={u.name}>
+                    <StyledTableCell component="th" scope="row">
+                      {i++}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {u.firstName}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{u.lastName}</StyledTableCell>
+                    <StyledTableCell align="left">{u.userName}</StyledTableCell>
+                    <StyledTableCell align="left">{u.email}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <div className="d-flex">
+                        <div className="pass">
+                          {values.showPassword ? "" : values.password}
+                          {values.showPassword ? u.password : ""}
+                        </div>
+                        <IconButton onClick={() => handleClickShowPassword()}>
+                          {values.showPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
                       </div>
-                      <IconButton onClick={() => handleClickShowPassword()}>
-                        {values.showPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </div>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <div className="d-flex">
-                      <CreateIcon
-                        className="icon"
-                        onClick={() => handleUpdate(u._id)}
-                      />
-                      <DeleteIcon
-                        className="delete"
-                        onClick={() => handleDelete(u._id)}
-                      />
-                    </div>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <div className="d-flex">
+                        <CreateIcon
+                          className="icon"
+                          onClick={() => handleUpdate(u._id)}
+                        />
+                        <DeleteIcon
+                          className="delete"
+                          onClick={() => handleDelete(u._id)}
+                        />
+                      </div>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[]}
+          component="div"
+          count={user.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </div>
     </div>
   );

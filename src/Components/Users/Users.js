@@ -3,7 +3,6 @@ import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import "./Users.css";
 import { Form } from "react-bootstrap";
 import Button from "@restart/ui/esm/Button";
-
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,9 +14,9 @@ import Paper from "@material-ui/core/Paper";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import axios from "axios";
-import { IconButton, TableFooter, TablePagination } from "@material-ui/core";
+import { IconButton, TablePagination } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
-import {  useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -53,6 +52,7 @@ const Users = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  // pagination
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -61,11 +61,21 @@ const Users = () => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
+  // .......................
+
   const handleBlur = (e) => {
     const newInfo = { ...info };
     newInfo[e.target.name] = e.target.value;
     setInfo(newInfo);
   };
+
+  // loading data in table
+  const userInfo = () => {
+    fetch("http://localhost:5000/users")
+      .then((res) => res.json())
+      .then((data) => setUser(data));
+  };
+  // .........................
 
   // fetch data
   useEffect(() => {
@@ -74,9 +84,12 @@ const Users = () => {
       .then((data) => setUser(data));
   }, []);
 
+  // ..............................
+
   // submit
   const handleSubmit = async (e) => {
-    const usersData = {
+    e.preventDefault();
+    const userData = {
       firstName: e.target.firstName.value,
       lastName: e.target.lastName.value,
       userName: e.target.userName.value,
@@ -95,21 +108,19 @@ const Users = () => {
       alert("password name can't be blank");
     } else {
       try {
-        const res = await axios.post(
-          "http://localhost:5000/addUser",
-          usersData
-        );
+        const res = await axios.post("http://localhost:5000/addUser", userData);
         if (res) {
           setDbStatus(res);
           e.target.reset();
-          alert("Information added successfully");
+          alert("User added successfully");
+          userInfo();
         }
       } catch (error) {
         console.error(error);
-        console.log(usersData);
       }
     }
   };
+  // ..............................
 
   //  delete
   const handleDelete = (id) => {
@@ -129,6 +140,7 @@ const Users = () => {
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
+  // .......................
 
   const history = useHistory();
   const handleUpdate = (id) => {
@@ -145,7 +157,7 @@ const Users = () => {
 
   return (
     <div className="container mt-5">
-      <p className="header">
+      <p className="header text-center">
         <SupervisedUserCircleIcon />
         User Management
       </p>
@@ -213,64 +225,65 @@ const Users = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {user.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((u) => (
-                <StyledTableRow key={u.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {i++}
-                  </StyledTableCell>
+              {user
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((u) => (
+                  <StyledTableRow key={u.name}>
+                    <StyledTableCell component="th" scope="row">
+                      {i++}
+                    </StyledTableCell>
 
-                  <StyledTableCell align="left">{u.firstName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.lastName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.userName}</StyledTableCell>
-                  <StyledTableCell align="left">{u.email}</StyledTableCell>
-                  <StyledTableCell align="left">
-                    <div className="d-flex">
-                      <div className="pass">
-                        {values.showPassword ? "" : values.password}
-                        {values.showPassword ? u.password : ""}
+                    <StyledTableCell align="left">
+                      {u.firstName}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">{u.lastName}</StyledTableCell>
+                    <StyledTableCell align="left">{u.userName}</StyledTableCell>
+                    <StyledTableCell align="left">{u.email}</StyledTableCell>
+                    <StyledTableCell align="left">
+                      <div className="d-flex">
+                        <div className="pass">
+                          {values.showPassword ? "" : values.password}
+                          {values.showPassword ? u.password : ""}
+                        </div>
+                        <IconButton onClick={() => handleClickShowPassword()}>
+                          {values.showPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
                       </div>
-                      <IconButton onClick={() => handleClickShowPassword()}>
-                        {values.showPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </div>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <div className="d-flex">
-                      <CreateIcon
-                        onClick={() => handleUpdate(u._id)}
-                        className="icon"
-                      />
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <div className="d-flex">
+                        <CreateIcon
+                          onClick={() => handleUpdate(u._id)}
+                          className="icon"
+                        />
 
-                      <DeleteIcon
-                        className="delete"
-                        onClick={() => handleDelete(u._id)}
-                      />
-                    </div>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+                        <DeleteIcon
+                          className="delete"
+                          onClick={() => handleDelete(u._id)}
+                        />
+                      </div>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
-          
-            
-     
-         </Table>
+          </Table>
         </TableContainer>
         <TablePagination
-        rowsPerPageOptions={[]}
-        component="div"
-        count={user.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        variant="outlined" 
-        shape="rounded"
-        color="primary"
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> 
+          rowsPerPageOptions={[]}
+          component="div"
+          count={user.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          variant="outlined"
+          shape="rounded"
+          color="primary"
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </div>
     </div>
   );
