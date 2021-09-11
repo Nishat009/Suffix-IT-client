@@ -73,7 +73,7 @@ const UpdateUser = () => {
 
   // fetch data
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("https://enigmatic-reef-50378.herokuapp.com/users")
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, []);
@@ -81,7 +81,7 @@ const UpdateUser = () => {
   // update information
   useEffect(() => {
     const loadData = async () => {
-      const res = await axios.get(`http://localhost:5000/updateUser/${id}`);
+      const res = await axios.get(`https://enigmatic-reef-50378.herokuapp.com/updateUser/${id}`);
       setUserInfo(res.data);
     };
     loadData();
@@ -117,7 +117,7 @@ const UpdateUser = () => {
       password: password || userInfo.password,
     };
     const res = await axios.patch(
-      `http://localhost:5000/updateUserInfo/${id}`,
+      `https://enigmatic-reef-50378.herokuapp.com/updateUserInfo/${id}`,
       updateStudent
     );
     if (res) {
@@ -130,7 +130,7 @@ const UpdateUser = () => {
 
   //  delete
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/deleteUser/${id}`, {
+    fetch(`https://enigmatic-reef-50378.herokuapp.com/deleteUser/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -142,7 +142,7 @@ const UpdateUser = () => {
       });
   };
   const deleteUser = () => {
-    fetch(`http://localhost:5000/users`)
+    fetch(`https://enigmatic-reef-50378.herokuapp.com/users`)
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
