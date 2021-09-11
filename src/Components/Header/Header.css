@@ -23,7 +23,7 @@
   border-radius: 50px;
   color: white;
 }
-@media (max-width: 500px) {
+@media (min-width: 320px) {
   .menus {
     margin-left: 0px;
   }
@@ -36,7 +36,7 @@
   .sign {
     height: 42px;
     width: 145px;
-    margin-left: 110px;
+    margin-left: 35px;
     margin-top: 20px;
     background: #ff3a44;
     border-radius: 50px;

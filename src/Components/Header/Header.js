@@ -32,7 +32,7 @@ const Header = () => {
               </Link>
             </Nav>
             <Nav className="login-button">
-              <button class="btn sign">Login</button>
+              <button class="btn  sign">Login</button>
             </Nav>
           </Navbar.Collapse>
         </Container>
