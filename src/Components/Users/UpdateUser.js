@@ -84,7 +84,6 @@ const UpdateUser = () => {
       .then((res) => res.json())
       .then((data) => setUserInfo(data));
   }, [id]);
-  
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -104,7 +103,7 @@ const UpdateUser = () => {
   };
 
   // ...................................
- 
+
   // submit
   const handleUserClick = (id) => {
     const updatedUser = {
@@ -134,12 +133,11 @@ const UpdateUser = () => {
         }
       });
   };
- 
 
   // ..............................
- const history = useHistory();
+  const history = useHistory();
   const handleUpdate = (id) => {
-      history.push(`/updateUsers/${id}`);
+    history.push(`/updateUsers/${id}`);
   };
   //  delete
   const handleDelete = (id) => {
@@ -163,7 +161,6 @@ const UpdateUser = () => {
 
   const classes = useStyles();
 
-  
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
@@ -174,7 +171,6 @@ const UpdateUser = () => {
   return (
     <div className="container mt-5">
       <p className="header">
-       
         <SupervisedUserCircleIcon />
         User Management
       </p>
