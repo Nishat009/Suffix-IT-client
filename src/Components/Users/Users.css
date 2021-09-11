@@ -1,40 +1,39 @@
-.header{
-    font-size:25px;
-    font-weight:500;
+.header {
+  font-size: 25px;
+  font-weight: 500;
 }
-.table{
-    margin-top:20px;
-    margin-bottom:20px;
+.table {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-.icon{
-    background-color: rgb(26, 244, 81);
-    color: white;
-    border-radius: 40px;
-   padding: 5px;
+.icon {
+  background-color: rgb(26, 244, 81);
+  color: white;
+  border-radius: 40px;
+  padding: 5px;
 }
-.delete{
-    background-color: rgb(244, 7, 7);
-    color: white;
-    border-radius: 40px;
-   padding: 5px;
-   margin-left: 5px;
+.delete {
+  background-color: rgb(244, 7, 7);
+  color: white;
+  border-radius: 40px;
+  padding: 5px;
+  margin-left: 5px;
 }
-.pass{
-    padding-top: 15px;
+.pass {
+  padding-top: 15px;
 }
-.form{
-    width:50%;
+.form {
+  width: 50%;
 }
-@media(max-width:500px){
-    .form{
-        width:100%;
-    }  
-   
+@media (max-width: 500px) {
+  .form {
+    width: 100%;
+  }
 }
-.btn{
-    background-color: #330066;
-    color: white;
+.btn {
+  background-color: #330066;
+  color: white;
 }
-.btn:hover{
-    color: magenta
+.btn:hover {
+  color: magenta;
 }

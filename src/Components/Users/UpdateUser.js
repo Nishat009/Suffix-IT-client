@@ -32,7 +32,7 @@ const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
       backgroundColor: "#d9d9f2",
-    border:"1px",
+      border: "1px",
     },
   },
 }))(TableRow);
@@ -146,7 +146,7 @@ const UpdateUser = () => {
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
-// ................................
+  // ................................
 
   const classes = useStyles();
 

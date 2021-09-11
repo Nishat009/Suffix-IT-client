@@ -145,7 +145,6 @@ const Users = () => {
       .then((data) => setUser(data));
   };
 
-
   // .......................
 
   const history = useHistory();
@@ -161,7 +160,7 @@ const Users = () => {
   };
 
   var i = 1;
-  
+
   // ............................................
 
   return (
