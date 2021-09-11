@@ -24,15 +24,7 @@
   color: white;
 }
 @media (min-width: 320px) {
-  .menus {
-    margin-left: 0px;
-  }
-  .menu {
-    margin-top: 20px;
-    margin-right: 85px;
-    text-decoration: none;
-    color: white;
-  }
+ 
   .sign {
     height: 42px;
     width: 145px;
