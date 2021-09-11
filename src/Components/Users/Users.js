@@ -72,7 +72,7 @@ const Users = () => {
 
   // loading data in table
   const userInfo = () => {
-    fetch("http://localhost:5000/users")
+    fetch("https://enigmatic-reef-50378.herokuapp.com/users")
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
@@ -80,7 +80,7 @@ const Users = () => {
 
   // fetch data
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("https://enigmatic-reef-50378.herokuapp.com/users")
       .then((res) => res.json())
       .then((data) => setUser(data));
   }, []);
@@ -109,7 +109,10 @@ const Users = () => {
       alert("password name can't be blank");
     } else {
       try {
-        const res = await axios.post("http://localhost:5000/addUser", userData);
+        const res = await axios.post(
+          "https://enigmatic-reef-50378.herokuapp.com/addUser",
+          userData
+        );
         if (res) {
           setDbStatus(res);
           e.target.reset();
@@ -125,7 +128,7 @@ const Users = () => {
 
   //  delete
   const handleDelete = (id) => {
-    fetch(`http://localhost:5000/deleteUser/${id}`, {
+    fetch(`https://enigmatic-reef-50378.herokuapp.com/deleteUser/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -137,10 +140,12 @@ const Users = () => {
       });
   };
   const deleteUser = () => {
-    fetch(`http://localhost:5000/users`)
+    fetch(`https://enigmatic-reef-50378.herokuapp.com/users`)
       .then((res) => res.json())
       .then((data) => setUser(data));
   };
+
+
   // .......................
 
   const history = useHistory();
@@ -151,15 +156,13 @@ const Users = () => {
   const classes = useStyles();
 
   const handleClickShowPassword = (id) => {
-    // // const pass = user.find((p) => p._id === id);
-    // // /if (pass) {
-       setValues({ ...values, showPassword: !values.showPassword });
-    // // }
-    // //
-     console.log(id);
+    setValues({ ...values, showPassword: !values.showPassword });
+    console.log(id);
   };
 
   var i = 1;
+  
+  // ............................................
 
   return (
     <div className="container mt-5">
@@ -251,9 +254,7 @@ const Users = () => {
                           {values.showPassword ? u.password : ""}
                         </div>
 
-                        <IconButton
-                          onClick={() => handleClickShowPassword()}
-                        >
+                        <IconButton onClick={() => handleClickShowPassword()}>
                           {values.showPassword ? (
                             <VisibilityOff />
                           ) : (
@@ -286,7 +287,6 @@ const Users = () => {
           count={user.length}
           rowsPerPage={rowsPerPage}
           page={page}
-        
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
