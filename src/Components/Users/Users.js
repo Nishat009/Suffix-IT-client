@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: "#2d2d86",
     color: theme.palette.common.white,
   },
   body: {
@@ -31,7 +31,8 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "#d9d9f2",
+      border: "1px",
     },
   },
 }))(TableRow);
@@ -51,7 +52,7 @@ const Users = () => {
     showPassword: false,
   });
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(4);
   // pagination
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -149,8 +150,13 @@ const Users = () => {
 
   const classes = useStyles();
 
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
+  const handleClickShowPassword = (id) => {
+    // // const pass = user.find((p) => p._id === id);
+    // // /if (pass) {
+       setValues({ ...values, showPassword: !values.showPassword });
+    // // }
+    // //
+     console.log(id);
   };
 
   var i = 1;
@@ -200,11 +206,10 @@ const Users = () => {
             onBlur={handleBlur}
             name="password"
             type="password"
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             placeholder="Password"
           />
         </Form.Group>
-        <Button className="btn btn-primary w-100" type="submit">
+        <Button className="btn  w-100" type="submit">
           Create User
         </Button>
       </Form>
@@ -228,7 +233,7 @@ const Users = () => {
               {user
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((u) => (
-                  <StyledTableRow key={u.name}>
+                  <StyledTableRow key={u.name} className={classes.tables}>
                     <StyledTableCell component="th" scope="row">
                       {i++}
                     </StyledTableCell>
@@ -245,7 +250,10 @@ const Users = () => {
                           {values.showPassword ? "" : values.password}
                           {values.showPassword ? u.password : ""}
                         </div>
-                        <IconButton onClick={() => handleClickShowPassword()}>
+
+                        <IconButton
+                          onClick={() => handleClickShowPassword()}
+                        >
                           {values.showPassword ? (
                             <VisibilityOff />
                           ) : (
@@ -278,9 +286,7 @@ const Users = () => {
           count={user.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          variant="outlined"
-          shape="rounded"
-          color="primary"
+        
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

@@ -20,7 +20,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Visibility from "@material-ui/icons/Visibility";
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: "#2d2d86",
     color: theme.palette.common.white,
   },
   body: {
@@ -31,7 +31,8 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "#d9d9f2",
+    border:"1px",
     },
   },
 }))(TableRow);
@@ -57,7 +58,7 @@ const UpdateUser = () => {
     showPassword: false,
   });
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(4);
 
   // pagination
   const handleChangePage = (event, newPage) => {
@@ -136,7 +137,7 @@ const UpdateUser = () => {
       .then((data) => {
         if (data) {
           deleteUser();
-          alert("User Deleted Successfully");
+          alert("Are you sure to delete this data?");
         }
       });
   };
@@ -148,7 +149,7 @@ const UpdateUser = () => {
 // ................................
 
   const classes = useStyles();
-  
+
   const history = useHistory();
   const handleUpdate = (id) => {
     history.push(`/updateUsers/${id}`);
@@ -218,7 +219,7 @@ const UpdateUser = () => {
 
         <Button
           onClick={() => handleUserClick(userInfo._id)}
-          className="btn btn-primary w-100"
+          className="btn  w-100"
           type="submit"
         >
           Update User

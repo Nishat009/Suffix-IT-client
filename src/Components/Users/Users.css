@@ -25,9 +25,16 @@
 .form{
     width:50%;
 }
-@media(max-width:600px){
+@media(max-width:500px){
     .form{
         width:100%;
     }  
    
+}
+.btn{
+    background-color: #330066;
+    color: white;
+}
+.btn:hover{
+    color: magenta
 }
