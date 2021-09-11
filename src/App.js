@@ -12,7 +12,7 @@ function App() {
       <Router>
         <Header />
         <Switch>
-          <Route path="/User">
+          <Route path="/user">
             <Users></Users>
           </Route>
           <Route path="/about">

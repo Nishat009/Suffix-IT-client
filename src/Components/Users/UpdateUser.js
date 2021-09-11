@@ -80,12 +80,11 @@ const UpdateUser = () => {
 
   // update information
   useEffect(() => {
-    const loadData = async () => {
-      const res = await axios.get(`https://enigmatic-reef-50378.herokuapp.com/updateUser/${id}`);
-      setUserInfo(res.data);
-    };
-    loadData();
+    fetch(`https://enigmatic-reef-50378.herokuapp.com/updateUser/${id}`)
+      .then((res) => res.json())
+      .then((data) => setUserInfo(data));
   }, [id]);
+  
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -105,10 +104,10 @@ const UpdateUser = () => {
   };
 
   // ...................................
-
+ 
   // submit
-  const handleUserClick = async (id) => {
-    const updateStudent = {
+  const handleUserClick = (id) => {
+    const updatedUser = {
       id,
       firstName: firstName || userInfo.firstName,
       lastName: lastName || userInfo.lastName,
@@ -116,18 +115,32 @@ const UpdateUser = () => {
       email: email || userInfo.email,
       password: password || userInfo.password,
     };
-    const res = await axios.patch(
-      `https://enigmatic-reef-50378.herokuapp.com/updateUserInfo/${id}`,
-      updateStudent
-    );
-    if (res) {
-      setDbStatus(res);
-      alert("User information Updated");
-    }
+    console.log(updatedUser);
+
+    const url = `https://enigmatic-reef-50378.herokuapp.com/updateUserInfo/${id}`;
+    fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedUser),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setDbStatus(data);
+          alert("User information Updated");
+          history.push("/user");
+        }
+      });
   };
+ 
 
   // ..............................
-
+ const history = useHistory();
+  const handleUpdate = (id) => {
+      history.push(`/updateUsers/${id}`);
+  };
   //  delete
   const handleDelete = (id) => {
     fetch(`https://enigmatic-reef-50378.herokuapp.com/deleteUser/${id}`, {
@@ -150,23 +163,22 @@ const UpdateUser = () => {
 
   const classes = useStyles();
 
-  const history = useHistory();
-  const handleUpdate = (id) => {
-    history.push(`/updateUsers/${id}`);
-  };
+  
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
-
+  const handlePSubmit = (e) => {
+    e.preventDefault();
+  };
   var i = 1;
   return (
     <div className="container mt-5">
       <p className="header">
-        {" "}
+       
         <SupervisedUserCircleIcon />
         User Management
       </p>
-      <Form className="form m-auto">
+      <Form onSubmit={handlePSubmit} className="form m-auto">
         <Form.Group className="mb-3">
           <Form.Control
             defaultValue={userInfo.firstName}
